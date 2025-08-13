@@ -1,81 +1,30 @@
 {
   lib,
-  rustPlatform,
-  fetchFromGitHub,
-  pkg-config,
-  wrapGAppsHook,
-  atk,
-  cairo,
-  gdk-pixbuf,
-  glib,
-  gtk3,
-  libxkbcommon,
-  openssl,
-  pango,
-  zstd,
   stdenv,
-  darwin,
-  wayland,
+  fetchurl,
 }:
 
-rustPlatform.buildRustPackage rec {
+stdenv.mkDerivation rec {
   pname = "drg-mint";
   version = "0.2.10";
 
-  src = fetchFromGitHub {
-    owner = "trumank";
-    repo = "mint";
-    rev = "v${version}";
-    hash = "sha256-iVDSQ/TyxrgNmJYwK/UgZCU/iUOeYrHyBaqcXgvkCnY=";
+  src = fetchurl {
+    url = "https://github.com/trumank/mint/releases/download/v${version}/drg_mod_integration-x86_64-unknown-linux-gnu.tar.xz";
+    sha256 = "sha256-Ukpa/tvFUXZNvRPUo6CPwQiIt/yWLREdvAu1S8b/eyw=";
   };
 
-  cargoLock = {
-    lockFile = ./Cargo.lock;
-    outputHashes = {
-      "egui_dnd-0.5.0" = "sha256-zJQaq5/dfiY/d8l+IwgKgJvXJhtvKf+1cTC2hzhodiA=";
-      "modio-0.7.1" = "sha256-/hlTSsKbSyDcQVTu5DSEHVcupOHrcmE3HHcMNKUgsCY=";
-      "patternsleuth_scanner-0.1.0" = "sha256-kKX2AiVrVxdJu6gtBZVYS4LwMHR1tEXdSO727+ObUEw=";
-      "repak-0.1.7" = "sha256-bimhmsJ+RpwXbSmXUB710v1hsBZeN4RiEEnkbeQdGK4=";
-      "uasset_utils-0.1.0" = "sha256-HlQLA3Wjh2Zep+xiyAb9iHftICoTWoWTXPLth6GH2wo=";
-      "unreal_asset-0.1.16" = "sha256-3sJKM45txARjYIXYkEj/NrnfQUuDC2ybQoaBwVYNGVI=";
-    };
-  };
+  buildInputs = [ ];
 
-  nativeBuildInputs = [
-    pkg-config
-    wrapGAppsHook
-  ];
+  installPhase = ''
+    mkdir -p $out/bin
+    cp drg_mod_integration $out/bin/drg-mint
+  '';
 
-  buildInputs = [
-    atk
-    cairo
-    gdk-pixbuf
-    glib
-    gtk3
-    libxkbcommon
-    openssl
-    pango
-    zstd
-  ] ++ lib.optionals stdenv.isDarwin [
-    darwin.apple_sdk.frameworks.AppKit
-    darwin.apple_sdk.frameworks.CoreGraphics
-    darwin.apple_sdk.frameworks.CoreServices
-    darwin.apple_sdk.frameworks.Foundation
-    darwin.apple_sdk.frameworks.Security
-  ] ++ lib.optionals stdenv.isLinux [
-    wayland
-  ];
-
-  env = {
-    ZSTD_SYS_USE_PKG_CONFIG = true;
-  };
-
-  meta = {
-    description = "Deep Rock Galactic mod loader and integration";
+  meta = with lib; {
+    description = "Deep Rock Galactic mod loader and integration (MINT)";
     homepage = "https://github.com/trumank/mint";
-    changelog = "https://github.com/trumank/mint/blob/${src.rev}/CHANGELOG.md";
-    license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [ ];
-    mainProgram = "drg-mint";
+    license = licenses.mit;
+    maintainers = with maintainers; [ Furret-png ];
+    platforms = platforms.linux;
   };
 }
