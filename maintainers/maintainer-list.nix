@@ -8810,6 +8810,12 @@
     name = "Funkeleinhorn";
     keys = [ { fingerprint = "689D 1C81 DA0D 1EB2 F029  D24E C7BE A25A 0A33 5A72"; } ];
   };
+  Furrent-png = {
+    email = "annaknot@proton.me";
+    github = "Furret-png";
+    githubId = 69658166;
+    name = "Anna Knot";
+  };
   fusion809 = {
     email = "brentonhorne77@gmail.com";
     github = "fusion809";
